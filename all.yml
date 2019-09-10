@@ -1,5 +1,6 @@
 - name: Host Prerequisites
-  hosts: zookeeper:kafka_broker:schema_registry:kafka_connect:ksql:control_center:kafka_rest
+  hosts: zookeeper:kafka_broker:kafka_connect:ksql:control_center
+  # hosts: zookeeper:kafka_broker:schema_registry:kafka_connect:ksql:control_center:kafka_rest
   tags:
     - always
   tasks:
@@ -50,23 +51,23 @@
   - import_role:
       name: confluent.kafka_broker
 
-- name: Schema Registry Provisioning
-  hosts: schema_registry
-  gather_facts: no
-  tags:
-    - schema_registry
-  tasks:
-  - import_role:
-      name: confluent.schema_registry
+# - name: Schema Registry Provisioning
+#   hosts: schema_registry
+#   gather_facts: no
+#   tags:
+#     - schema_registry
+#   tasks:
+#   - import_role:
+#       name: confluent.schema_registry
 
-- name: Kafta Connect Provisioning
-  hosts: kafka_connect
-  gather_facts: no
-  tags:
-    - kafka_connect
-  tasks:
-  - import_role:
-      name: confluent.kafka_connect
+# - name: Kafta Connect Provisioning
+#   hosts: kafka_connect
+#   gather_facts: no
+#   tags:
+#     - kafka_connect
+#   tasks:
+#   - import_role:
+#       name: confluent.kafka_connect
 
 - name: KSQL Provisioning
   hosts: ksql
@@ -86,11 +87,11 @@
   - import_role:
       name: confluent.control_center
 
-- name: Kafka Rest Provisioning
-  hosts: kafka_rest
-  gather_facts: no
-  tags:
-    - kafka_rest
-  tasks:
-  - import_role:
-      name: confluent.kafka_rest
+# - name: Kafka Rest Provisioning
+#   hosts: kafka_rest
+#   gather_facts: no
+#   tags:
+#     - kafka_rest
+#   tasks:
+#   - import_role:
+#       name: confluent.kafka_rest
