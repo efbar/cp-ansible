@@ -14,3 +14,4 @@ client_keystore_creds
 client_sslkey_creds
 client_truststore_creds
 generated_ssl_files
+certs/

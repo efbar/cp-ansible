@@ -1,0 +1,63 @@
+- name: delete certificate directory
+  file:
+    state: absent
+    path: /var/ssl/private
+  when: group_names[0] in ["control_center", "ksql", "kafka_broker"]
+
+- name: create ssl certificate directory
+  file:
+    path: /var/ssl/private
+    state: directory
+    mode: 0755
+  when: group_names[0] in ["control_center", "ksql", "kafka_broker"]
+
+# - name: print group_names
+#   debug:
+#     msg: "group_names: {{ group_names }}"
+
+- name: copy ssl script to host
+  copy:
+    src: scripts/certs-import.sh
+    dest: /var/ssl/private
+    mode: 0755
+  when: group_names[0] in ["control_center", "ksql", "kafka_broker"]
+
+- name: copy ca public certificate to hosts
+  synchronize:
+    src: certs/ca/ca-cert
+    dest: "/var/ssl/private"
+  when: group_names[0] in ["control_center", "ksql", "kafka_broker"]
+
+- name: copy signed certificate to broker
+  synchronize:
+    src: certs/kafkabroker/
+    dest: /var/ssl/private/
+  when: group_names[0] == "kafka_broker"
+  with_lines: ls certs/kafkabroker | grep -E 'crt|\.pem'
+
+- name: copy signed certificate to ksql
+  synchronize:
+    src: certs/ksql/
+    dest: /var/ssl/private/
+  when: group_names[0] == "ksql"
+  with_lines: ls certs/ksql | grep -E 'crt|\.pem'
+
+- name: copy signed certificate to control_center
+  synchronize:
+    src: certs/controlcenter/
+    dest: /var/ssl/private/
+  when: group_names[0] == "control_center"
+  with_lines: ls certs/controlcenter | grep -E 'crt|\.pem'
+
+# - name: create keystore and truststore
+#   file: 
+#       path: "/var/ssl/private/{{ item }}"
+#       state: touch
+#       mode: 0775
+#   with_items:
+#   - "{{group_names[0]}}.keystore.jks"
+#   - "{{group_names[0]}}.truststore.jks"
+
+- name: Import SSL Certs
+  command: /var/ssl/private/certs-import.sh "{{group_names[0]}}" "{{keystore_password}}"
+  when: group_names[0] in ["control_center", "ksql", "kafka_broker"]

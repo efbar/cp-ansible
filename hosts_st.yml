@@ -6,7 +6,10 @@ all:
     ansible_become: true
 
     ## Required var, with options plaintext, ssl, sasl_ssl, ssl_customcerts, kerberos_ssl, kerberos, kerberos_ssl_customcerts
-    security_mode: ssl
+    security_mode: ssl_custom_sync
+    
+    keystore_password: password
+    key_password: password
 
     ## Required vars for any kerberos install
     # kerberos:
@@ -55,23 +58,23 @@ all:
 
 zookeeper:
   hosts:
-    ec2-13-48-136-153.eu-north-1.compute.amazonaws.com:
-    ec2-13-48-58-171.eu-north-1.compute.amazonaws.com:
-    ec2-13-48-25-56.eu-north-1.compute.amazonaws.com:
+    ec2-13-53-40-162.eu-north-1.compute.amazonaws.com:
+    ec2-13-53-197-161.eu-north-1.compute.amazonaws.com:
+    ec2-13-53-193-105.eu-north-1.compute.amazonaws.com:
 kafka_broker:
   hosts:
-    ec2-13-53-41-93.eu-north-1.compute.amazonaws.com:
+    ec2-13-53-165-82.eu-north-1.compute.amazonaws.com:
       broker_id: 1
-    ec2-13-53-175-244.eu-north-1.compute.amazonaws.com:
+    ec2-13-48-10-45.eu-north-1.compute.amazonaws.com:
       broker_id: 2
-    ec2-13-53-155-231.eu-north-1.compute.amazonaws.com:
+    ec2-13-53-42-16.eu-north-1.compute.amazonaws.com:
       broker_id: 3
 ksql:
   hosts:
-    ec2-13-48-10-15.eu-north-1.compute.amazonaws.com:
+    ec2-13-53-205-93.eu-north-1.compute.amazonaws.com:
 control_center:
   hosts:
-    ec2-13-48-43-81.eu-north-1.compute.amazonaws.com:
+    ec2-13-53-212-190.eu-north-1.compute.amazonaws.com:
       control_center:
         properties:
-          confluent.controlcenter.connect.cluster: ec2-13-53-41-93.eu-north-1.compute.amazonaws.com:8083
+          confluent.controlcenter.connect.cluster: ec2-13-53-165-82.eu-north-1.compute.amazonaws.com:8083

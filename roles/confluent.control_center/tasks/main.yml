@@ -46,7 +46,7 @@
     mode: 0640
     owner: "{{control_center.user}}"
     group: "{{control_center.group}}"
-  when: security_mode == "ssl"
+  when: security_mode in ["ssl", "ssl_custom_sync"]
   notify:
     - restart control center
 - name: control center create config

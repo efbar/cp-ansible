@@ -53,7 +53,7 @@
     mode: 0640
     owner: "{{ksql.user}}"
     group: "{{ksql.group}}"
-  when: security_mode == "ssl"
+  when: security_mode in ["ssl", "ssl_custom_sync"]
   notify:
     - restart ksql
 - name: ksql create config
