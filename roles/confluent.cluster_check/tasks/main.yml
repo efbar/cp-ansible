@@ -25,11 +25,14 @@
   set_fact:
     actual_num_active_broker: "{{ result.stdout | from_json | length }}"
     preferred_num_active_broker: "{{ groups['kafka_broker'] | length }}"
+  when: result is defined and result.stdout is defined
 
 - name: Check Kafka cluster status
   fail:
     msg: "Active Brokers Number, preferred is {{ actual_num_active_broker }}, actual is {{ preferred_num_active_broker }}"
   failed_when: actual_num_active_broker != preferred_num_active_broker
+  when: actual_num_active_broker is defined and preferred_num_active_broker is defined
+
   
 #TODO
 # - unicità processi
