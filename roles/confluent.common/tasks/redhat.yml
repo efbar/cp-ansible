@@ -4,6 +4,15 @@
     state: latest
   when: install_java|bool
 
+- name: Install useful packages
+  yum:
+    name: "{{ packages }}"
+  vars:
+    packages:
+    - nc
+    - net-tools
+    - wget
+
 - name: Add Confluent Dist Yum Repo
   yum_repository:
     name: Confluent.dist
