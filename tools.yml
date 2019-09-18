@@ -1,0 +1,6 @@
+- name: Maintenance
+  hosts: all
+  gather_facts: no
+  tasks:
+  - import_role:
+       name: confluent.tools

@@ -1,0 +1,39 @@
+# - name: print hostvars
+#   debug:
+#     msg: "hostvars: {{ group_names[0] }}"
+#   when: play_hosts.index(inventory_hostname) < 1
+# - name: print group_names
+#   debug:
+#     msg: "group_names: {{ groups['kafka_broker'] | length }}"
+- name: print hostname
+  tags:  
+    - print
+  debug:
+    msg: "inventory_hostname: {{ inventory_hostname }}"
+
+- name: restart zookeeper
+  tags:
+    - restart_zookeeper
+  systemd:
+    name: "confluent-zookeeper"
+    state: restarted
+  when: group_names[0] == "zookeeper"
+
+- name: restart kafka
+  tags:
+    - restart_kafka
+  systemd:
+    name: "confluent-kafka"
+    state: restarted
+  when: group_names[0] == "kafka_broker"
+
+- name: get validation end date of certs
+  tags:
+    - certs_endate
+  include: cert_enddate.yml
+  when: group_names[0] != "zookeeper"
+
+- name: print validation end date of certs
+  tags:
+    - print_results
+  include: print_results.yml
