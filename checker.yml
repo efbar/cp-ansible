@@ -1,0 +1,6 @@
+- name: Check post-install status
+  hosts: zookeeper
+  tasks:
+  - import_role:
+      name: confluent.cluster_check
+    when: play_hosts.index(inventory_hostname) < 1
