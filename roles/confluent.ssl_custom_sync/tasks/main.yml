@@ -15,12 +15,6 @@
 #   debug:
 #     msg: "group_names: {{ group_names }}"
 
-- name: copy ssl script to host
-  copy:
-    src: scripts/certs-import.sh
-    dest: /var/ssl/private
-    mode: 0755
-  when: group_names[0] in ["control_center", "ksql", "kafka_broker"]
 
 - name: copy ca public certificate to hosts
   synchronize:
@@ -28,27 +22,39 @@
     dest: "/var/ssl/private"
   when: group_names[0] in ["control_center", "ksql", "kafka_broker"]
 
-- name: copy signed certificate to broker
+- name: copy signed certificate and priv key to broker
   synchronize:
-    src: certs/kafkabroker/
-    dest: /var/ssl/private/
+    src: "certs/kafkabroker/{{ item }}"
+    dest: "/var/ssl/private/"
   when: group_names[0] == "kafka_broker"
-  with_lines: ls certs/kafkabroker | grep -E 'crt|\.pem'
+  with_items:
+    - crt
+    - kafkabroker.keystore.p12
 
 - name: copy signed certificate to ksql
   synchronize:
-    src: certs/ksql/
-    dest: /var/ssl/private/
+    src: "certs/ksql/{{ item }}"
+    dest: "/var/ssl/private/"
   when: group_names[0] == "ksql"
-  with_lines: ls certs/ksql | grep -E 'crt|\.pem'
+  with_items:
+    - crt
+    - ksql.keystore.p12
 
 - name: copy signed certificate to control_center
   synchronize:
-    src: certs/controlcenter/
-    dest: /var/ssl/private/
+    src: "certs/controlcenter/{{ item }}"
+    dest: "/var/ssl/private/"
   when: group_names[0] == "control_center"
-  with_lines: ls certs/controlcenter | grep -E 'crt|\.pem'
+  with_items:
+    - crt
+    - controlcenter.keystore.p12
 
+- name: copy ssl script to control_center, ksql and kafka_broker hosts
+  copy:
+    src: scripts/certs-import.sh
+    dest: /var/ssl/private
+    mode: 0755
+  when: group_names[0] in ["control_center", "ksql", "kafka_broker"]
 # - name: create keystore and truststore
 #   file: 
 #       path: "/var/ssl/private/{{ item }}"
@@ -58,6 +64,6 @@
 #   - "{{group_names[0]}}.keystore.jks"
 #   - "{{group_names[0]}}.truststore.jks"
 
-- name: Import SSL Certs
+- name: Import SSL Certs to control_center, ksql and kafka_broker hosts
   command: /var/ssl/private/certs-import.sh "{{group_names[0]}}" "{{keystore_password}}"
   when: group_names[0] in ["control_center", "ksql", "kafka_broker"]
