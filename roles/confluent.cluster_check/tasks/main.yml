@@ -33,9 +33,8 @@
   failed_when: actual_num_active_broker != preferred_num_active_broker
   when: actual_num_active_broker is defined and preferred_num_active_broker is defined
 
-  
+# - name: 
 #TODO
-# - unicità processi
 # - port
 # - cc, ksql api status
 # - spazio disco: storage kafka, ksql, cc
