@@ -5,11 +5,20 @@
 # - name: print group_names
 #   debug:
 #     msg: "group_names: {{ groups['kafka_broker'] | length }}"
-- name: print hostname
-  tags:  
-    - print
-  debug:
-    msg: "inventory_hostname: {{ inventory_hostname }}"
+# - name: print hostnames
+#   tags:  
+#     - print_hostnames
+#   debug:
+#     msg: "inventory_hostname: {{ inventory_hostname }}"
+
+- name: set_var
+  tags:
+    - set_var
+  set_fact:
+    kafka_jps: "SupportedKafka"
+    zk_jps: "QuorumPeerMain"
+    ksql_jps: "KqlServerMain"
+    cc_jps: "ControlCenter"
 
 - name: restart zookeeper
   tags:
@@ -30,10 +39,31 @@
 - name: get validation end date of certs
   tags:
     - certs_endate
-  include: cert_enddate.yml
+  shell: "echo $(cd /var/ssl/private && openssl x509 -enddate -noout -in crt | cut -d '=' -f2)"
+  register: result
   when: group_names[0] != "zookeeper"
 
-- name: print validation end date of certs
+- name: check jvm process count
+  tags:
+    - jps_count
+  shell: "jps | grep -v Jps | awk '{print $2}'|wc -l"
+  register: result
+  failed_when: result.stdout != "1"
+
+- name: check jvm process identity
+  tags:
+    - jps_identity
+  shell: "jps | grep -v Jps | awk '{print $2}'"
+  register: result
+  failed_when:
+    - group_names[0] == "kafka_broker" and result.stdout != kafka_jps
+    - group_names[0] == "zookeeper" and result.stdout != zk_jps
+    - group_names[0] == "ksql" and result.stdout != ksql_jps
+    - group_names[0] == "control_center" and result.stdout != cc_jps
+  
+- name: print results stdout
   tags:
     - print_results
-  include: print_results.yml
+  debug:
+    msg: "{{result.stdout}}"
+  when: result is defined and result.stdout is defined
