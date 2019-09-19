@@ -55,14 +55,6 @@
     dest: /var/ssl/private
     mode: 0755
   when: group_names[0] in ["control_center", "ksql", "kafka_broker"]
-# - name: create keystore and truststore
-#   file: 
-#       path: "/var/ssl/private/{{ item }}"
-#       state: touch
-#       mode: 0775
-#   with_items:
-#   - "{{group_names[0]}}.keystore.jks"
-#   - "{{group_names[0]}}.truststore.jks"
 
 - name: Import SSL Certs to control_center, ksql and kafka_broker hosts
   command: /var/ssl/private/certs-import.sh "{{group_names[0]}}" "{{keystore_password}}"
