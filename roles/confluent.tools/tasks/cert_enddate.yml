@@ -1,3 +1,0 @@
-- name: get validation end date of certs
-  shell: "echo $(cd /var/ssl/private && openssl x509 -enddate -noout -in crt | cut -d '=' -f2)"
-  register: result
