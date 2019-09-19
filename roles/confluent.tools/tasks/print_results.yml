@@ -1,4 +1,0 @@
-- name: print results stdout
-  debug:
-    msg: "{{result.stdout}}"
-  when: result is defined and result.stdout is defined
