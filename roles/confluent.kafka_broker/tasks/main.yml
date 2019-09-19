@@ -54,7 +54,7 @@
     mode: 0640
     owner: "{{kafka_broker.user}}"
     group: "{{kafka_broker.group}}"
-  when: security_mode == "ssl"
+  when: security_mode in ["ssl", "ssl_custom_sync"]
   notify:
     - restart kafka
 - name: broker sasl_ssl config

@@ -1,0 +1,41 @@
+# - name: print hostvars
+#   debug:
+#     msg: "hostvars: {{ hostvars }}"
+# - name: print group_names
+#   debug:
+#     msg: "group_names: {{ groups['kafka_broker'] | length }}"
+# - name: print hostname
+#   debug:
+#     msg: "inventory_hostname: {{ hostname }}"
+
+- name: Get Zookeer cluster status
+  shell: "echo ruok | nc localhost 2181"
+  register: result
+
+- name: Check Zookeer cluster status
+  fail:
+    msg: "result is: {{ result.stdout }}"
+  failed_when: result.stdout != "imok"
+  
+- name: Get Kafka cluster status
+  shell: "zookeeper-shell localhost:2181 ls /brokers/ids | tail -n1"
+  register: result
+
+- name: Preparing to check
+  set_fact:
+    actual_num_active_broker: "{{ result.stdout | from_json | length }}"
+    preferred_num_active_broker: "{{ groups['kafka_broker'] | length }}"
+  when: result is defined and result.stdout is defined
+
+- name: Check Kafka cluster status
+  fail:
+    msg: "Active Brokers Number, preferred is {{ actual_num_active_broker }}, actual is {{ preferred_num_active_broker }}"
+  failed_when: actual_num_active_broker != preferred_num_active_broker
+  when: actual_num_active_broker is defined and preferred_num_active_broker is defined
+
+# - name: 
+#TODO
+# - port
+# - cc, ksql api status
+# - spazio disco: storage kafka, ksql, cc
+

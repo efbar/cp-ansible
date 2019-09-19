@@ -2,15 +2,15 @@
 {% include './includes/base_ksql.properties.j2' %}
 
 #SSL additions
-ssl.truststore.location=/var/ssl/private/client.truststore.jks
-ssl.truststore.password=confluent
-ssl.keystore.location=/var/ssl/private/client.keystore.jks
-ssl.keystore.password=confluent
-ssl.key.password=confluent
+ssl.truststore.location=/var/ssl/private/ksql.truststore.jks
+ssl.truststore.password=password
+ssl.keystore.location=/var/ssl/private/ksql.keystore.jks
+ssl.keystore.password=password
+ssl.key.password=password
 security.protocol=SSL
-confluent.monitoring.interceptor.ssl.truststore.location=/var/ssl/private/client.truststore.jks
-confluent.monitoring.interceptor.ssl.truststore.password=confluent
-confluent.monitoring.interceptor.ssl.keystore.location=/var/ssl/private/client.keystore.jks
-confluent.monitoring.interceptor.ssl.keystore.password=confluent
-confluent.monitoring.interceptor.ssl.key.password=confluent
+confluent.monitoring.interceptor.ssl.truststore.location=/var/ssl/private/ksql.truststore.jks
+confluent.monitoring.interceptor.ssl.truststore.password=password
+confluent.monitoring.interceptor.ssl.keystore.location=/var/ssl/private/ksql.keystore.jks
+confluent.monitoring.interceptor.ssl.keystore.password=password
+confluent.monitoring.interceptor.ssl.key.password=password
 confluent.monitoring.interceptor.security.protocol=SSL

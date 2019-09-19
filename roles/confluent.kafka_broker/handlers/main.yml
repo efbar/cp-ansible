@@ -1,5 +1,15 @@
 - name: load sysctl
   command: sysctl -p
+- name: set swappiness
+  sysctl:
+    name: vm.swappiness
+    value: 1
+    state: present
+- name: set vm max_count
+  sysctl:
+    name: vm.max_map_count
+    value: 200000
+    state: present
 - name: reload systemd
   command: systemctl daemon-reload
 - name: restart kafka
