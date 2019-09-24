@@ -55,23 +55,23 @@ all:
 
 zookeeper:
   hosts:
-    ec2-13-53-41-93.eu-north-1.compute.amazonaws.com:
-    ec2-13-53-175-244.eu-north-1.compute.amazonaws.com:
-    ec2-13-53-155-231.eu-north-1.compute.amazonaws.com:
+    <zk1_host_address>:
+    <zk2_host_address>:
+    <zk3_host_address>:
 kafka_broker:
   hosts:
-    ec2-13-53-41-93.eu-north-1.compute.amazonaws.com:
+    <bk1_host_address>:
       broker_id: 1
-    ec2-13-53-175-244.eu-north-1.compute.amazonaws.com:
+    <bk2_host_address>:
       broker_id: 2
-    ec2-13-53-155-231.eu-north-1.compute.amazonaws.com:
+    <bk3_host_address>:
       broker_id: 3
 ksql:
   hosts:
-    ec2-13-48-10-15.eu-north-1.compute.amazonaws.com:
+    <ksql1_host_address>:
 control_center:
   hosts:
-    ec2-13-48-43-81.eu-north-1.compute.amazonaws.com:
+    <cc_host_address>:
       control_center:
         properties:
-          confluent.controlcenter.connect.cluster: ec2-13-53-41-93.eu-north-1.compute.amazonaws.com:8083
+          confluent.controlcenter.connect.cluster: <bk1_host_address>:8083
